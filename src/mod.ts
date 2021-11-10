@@ -51,19 +51,31 @@ export async function fetchPosts(
         spoiler,
         over_18: NSFW,
         author,
+        all_awardings: rawAwardings
       } = p.data;
+      const awards = rawAwardings.map(a => {
+        return {
+          icon: {
+            url: a.icon_url,
+            format: a.icon_format
+          },
+          name: a.name
+        }
+      })
       return {
         subreddit,
         selftext,
         ups,
-        upvote_ratio: upvoteRatio,
+        upvoteRatio,
         thumbnail,
-        url_overridden_by_dest: imageURL,
+        imageURL,
         title,
         edited,
         spoiler,
-        over_18: NSFW,
+        NSFW,
         author,
+
+        awards
       };
     });
   return posts;

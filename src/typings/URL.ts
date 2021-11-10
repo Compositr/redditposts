@@ -1,1 +1,1 @@
-export type RedditURL = `${"https://" | "http://"}${string}`
+export type RedditURL = `${"https://" | "http://"}${string}`;

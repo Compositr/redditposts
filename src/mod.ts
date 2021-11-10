@@ -15,26 +15,27 @@ import { RedditPost } from "./typings/RedditPost.ts";
  */
 export async function fetchPosts(
   subreddit: string,
-  options?: Options
+  options?: Options,
 ): Promise<RedditPost[]> {
-  if (!subreddit)
+  if (!subreddit) {
     throw new Error(
-      "You forgot to specify a subreddit. Subreddits must be specified without the r/"
+      "You forgot to specify a subreddit. Subreddits must be specified without the r/",
     );
+  }
   const { data } = await (
     await fetch(
       `https://reddit.com/r/${subreddit}/${
         options?.category ?? "hot"
-      }.json?limit=${options?.amount ?? 10}`
+      }.json?limit=${options?.amount ?? 10}`,
     )
   ).json();
   const { children: postsRaw } = data;
 
-
-  if (!postsRaw || !postsRaw.length)
+  if (!postsRaw || !postsRaw.length) {
     throw new Error(
-      "[404] Could not get posts. Check that your subreddit name is correct."
+      "[404] Could not get posts. Check that your subreddit name is correct.",
     );
+  }
 
   const posts: RedditPost[] = postsRaw
     .filter((p: RawPost) => !(p.data.over_18 && options?.filterNSFW))
@@ -51,17 +52,17 @@ export async function fetchPosts(
         spoiler,
         over_18: NSFW,
         author,
-        all_awardings: rawAwardings
+        all_awardings: rawAwardings,
       } = p.data;
-      const awards = rawAwardings.map(a => {
+      const awards = rawAwardings.map((a) => {
         return {
           icon: {
             url: a.icon_url,
-            format: a.icon_format
+            format: a.icon_format,
           },
-          name: a.name
-        }
-      })
+          name: a.name,
+        };
+      });
       return {
         subreddit,
         selftext,
@@ -75,7 +76,7 @@ export async function fetchPosts(
         NSFW,
         author,
 
-        awards
+        awards,
       };
     });
   return posts;
